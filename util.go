@@ -31,6 +31,9 @@ func apiCall(name string, url string, authentication string) (string, error) {
 	secureClient := newSecureHTTPClient()
 
 	resp, _ := secureClient.Do(req)
+	if err != nil {
+		return "", err
+	}
 
 	defer resp.Body.Close()
 

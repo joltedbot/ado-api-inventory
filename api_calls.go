@@ -75,7 +75,7 @@ func getTeams(organizationUrl string, authentication string) {
 	output := "Id,Name,Description,Project ID,Project Name,URL,Identity,IdentityURL\n"
 
 	for _, team := range teamsList.Value {
-		output += fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s\n", team.Id, team.Name, team.Description, team.ProjectId, team.ProjectName, team.URL, team.Identity, team.IdentityUrl)
+		output += fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s\n", team.Id, team.Name, team.Description, team.ProjectId, team.ProjectName, team.URL, team.Identity.CustomDisplayName, team.IdentityUrl)
 	}
 
 	writeToFile(fileName, output)
