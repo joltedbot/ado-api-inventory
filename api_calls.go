@@ -113,7 +113,7 @@ func getRepositories(organizationUrl string, authentication string) {
 	output := "Id,Name,Created Date,Size,Default Branch,URL,Remote URL,SSH URL,Valid Remote URLs,Web URL,Is Disabled,Is Fork,Is In Maintenance,Parent Repository ID,Project ID\n"
 
 	for _, project := range projectList.Value {
-		output += fmt.Sprintf("%s,%s,%s,%d,%s,%s,%s,%s,%t,%s,%t,%t,%t,%s,%s\n", project.Id, project.Name, project.CreatedDate, project.Size, project.DefaultBranch, project.URL, project.RemoteUrl, project.SSHUrl, project.ValidRemoteUrls, project.WebUrl, project.IsDisabled, project.IsFork, project.IsInMaintenance, project.ParentRepository.Id, project.Project.Id)
+		output += fmt.Sprintf("%s,%s,%s,%d,%s,%s,%s,%s,%s,%s,%t,%t,%t,%s,%s\n", project.Id, project.Name, project.CreatedDate, project.Size, project.DefaultBranch, project.URL, project.RemoteUrl, project.SSHUrl, project.ValidRemoteUrls, project.WebUrl, project.IsDisabled, project.IsFork, project.IsInMaintenance, project.ParentRepository.Id, project.Project.Id)
 	}
 
 	writeToFile(fileName, output)
