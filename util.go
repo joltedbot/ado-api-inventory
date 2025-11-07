@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-func apiURL(isGraph bool, organizationUrl string, endpoint string) string {
+func apiURL(isGraph bool, organizationUrl string, endpoint string, parameters string) string {
 
 	base := "https://dev.azure.com/"
 	if isGraph {
 		base = "https://vssps.dev.azure.com/"
 	}
 
-	return base + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview"
+	return base + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview" + parameters
 
 }
 

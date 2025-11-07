@@ -20,8 +20,9 @@ func main() {
 
 	adoToken := getADOToken(tenant, clientId, clientSecret)
 
-	//getUsers(organization, adoToken)
-	//getProjects(organization, adoToken)
-	getTeams(organization, adoToken)
+	go getUsers(organization, adoToken)
+	go getProjects(organization, adoToken)
+	go getTeams(organization, adoToken)
+	go getRepositories(organization, adoToken)
 
 }
