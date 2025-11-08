@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 )
 
-func getUsers(organizationUrl string, authentication string) {
+func getUsers(organizationUrl string, authentication string, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	endpoint := "graph/users"
 	fileName := "graph-users.csv"
@@ -33,7 +35,8 @@ func getUsers(organizationUrl string, authentication string) {
 
 }
 
-func getProjects(organizationUrl string, authentication string) {
+func getProjects(organizationUrl string, authentication string, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	endpoint := "projects"
 	fileName := "projects.csv"
@@ -60,7 +63,8 @@ func getProjects(organizationUrl string, authentication string) {
 
 }
 
-func getTeams(organizationUrl string, authentication string) {
+func getTeams(organizationUrl string, authentication string, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	endpoint := "teams"
 	parameters := "&$expandIdentity=true"
@@ -93,7 +97,8 @@ func getTeams(organizationUrl string, authentication string) {
 
 }
 
-func getRepositories(organizationUrl string, authentication string) {
+func getRepositories(organizationUrl string, authentication string, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	endpoint := "git/repositories"
 	fileName := "repositories.csv"

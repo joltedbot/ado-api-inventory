@@ -7,10 +7,10 @@ type APIResults[T any] struct {
 
 type users struct {
 	Descriptor    string `json:"descriptor"`
-	DisplayName   string `json:"display_name"`
-	PrincipalName string `json:"principal_name"`
-	MailAddress   string `json:"mail_address"`
-	SubjectKind   string `json:"subject_kind"`
+	DisplayName   string `json:"displayname"`
+	PrincipalName string `json:"principalname"`
+	MailAddress   string `json:"mailaddress"`
+	SubjectKind   string `json:"subjectkind"`
 	Domain        string `json:"domain"`
 }
 

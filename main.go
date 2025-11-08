@@ -2,27 +2,33 @@ package main
 
 import (
 	"os"
+	"sync"
 )
 
 const OUTPUT_DIRECTORY = "output"
 
 func main() {
 
-	tenant := os.Getenv("ADO_TENANT_ID")
-	clientId := os.Getenv("ADO_CLIENT_ID")
-	clientSecret := os.Getenv("ADO_CLIENT_SECRET")
-	organization := os.Getenv("ADO_ORGANIZATION")
+	environment, err := getAndValidateEnvVars()
+	if err != nil {
+		println("You must set the ADO_TENANT_ID, ADO_CLIENT_ID, ADO_CLIENT_SECRET, and ADO_ORGANIZATION environment variables correctly before running this program.")
+		os.Exit(1)
+	}
 
-	err := os.Mkdir(OUTPUT_DIRECTORY, 0755)
+	err = os.Mkdir(OUTPUT_DIRECTORY, 0755)
 	if err != nil && !os.IsExist(err) {
 		panic(err)
 	}
 
-	adoToken := getADOToken(tenant, clientId, clientSecret)
+	adoToken := getADOToken(environment.TenantId, environment.ClientId, environment.ClientSecret)
 
-	go getUsers(organization, adoToken)
-	go getProjects(organization, adoToken)
-	go getTeams(organization, adoToken)
-	go getRepositories(organization, adoToken)
+	var wg sync.WaitGroup
+	wg.Add(4)
+	go getUsers(environment.Organization, adoToken, &wg)
+	go getProjects(environment.Organization, adoToken, &wg)
+	go getTeams(environment.Organization, adoToken, &wg)
+	go getRepositories(environment.Organization, adoToken, &wg)
+
+	wg.Wait()
 
 }
