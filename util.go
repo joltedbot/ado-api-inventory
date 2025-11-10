@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -68,7 +69,22 @@ func writeToFile(fileName string, data string) {
 	}
 }
 
-// Example of a more secure HTTP client configuration
+func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authentication string) (APIResults[T], error) {
+
+	response, err := apiCall(endpoint.resource, apiURL(endpoint.isGraph, endpoint.urlBase, endpoint.resource, ""), authentication)
+	if err != nil {
+		return APIResults[T]{}, err
+	}
+
+	err = json.Unmarshal([]byte(response), &results)
+	if err != nil {
+		return APIResults[T]{}, err
+	}
+
+	return results, nil
+
+}
+
 func newSecureHTTPClient() *http.Client {
 	return &http.Client{
 		Timeout: 30 * time.Second,

@@ -5,6 +5,13 @@ type APIResults[T any] struct {
 	Value []T `json:"value"`
 }
 
+type EndPoint struct {
+	resource   string
+	parameters string
+	urlBase    string
+	isGraph    bool
+}
+
 type users struct {
 	Descriptor    string `json:"descriptor"`
 	DisplayName   string `json:"displayname"`
