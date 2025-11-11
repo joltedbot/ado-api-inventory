@@ -17,11 +17,16 @@ func apiURL(isGraph bool, organizationUrl string, endpoint string, parameters st
 		base = "https://vssps.dev.azure.com/"
 	}
 
+	if parameters != "" {
+		parameters = "&" + parameters
+	}
+
 	return base + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview" + parameters
 
 }
 
-func apiCall(name string, url string, authentication string) (string, error) {
+func apiCall(name string, url string, continuationToken string, authentication string) (string, string, error) {
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		panic(err)
@@ -29,30 +34,35 @@ func apiCall(name string, url string, authentication string) (string, error) {
 
 	req.Header.Add("Authorization", "Bearer "+authentication)
 
+	if continuationToken != "" {
+		req.Header.Add("x-ms-continuationtoken", continuationToken)
+	}
+
 	secureClient := newSecureHTTPClient()
 
 	resp, _ := secureClient.Do(req)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	defer resp.Body.Close()
 
 	fmt.Println(name+" status:", resp.Status)
 
-	scanner := bufio.NewScanner(resp.Body)
+	continuationHeader := resp.Header.Get("x-ms-continuationtoken")
 
 	responseBody := ""
+	scanner := bufio.NewScanner(resp.Body)
 
-	for i := 0; scanner.Scan() && i < 5; i++ {
+	for scanner.Scan() {
 		responseBody += scanner.Text()
 	}
 
 	if err := scanner.Err(); err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return responseBody, nil
+	return responseBody, continuationHeader, nil
 }
 
 func writeToFile(fileName string, data string) {
@@ -71,16 +81,32 @@ func writeToFile(fileName string, data string) {
 
 func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authentication string) (APIResults[T], error) {
 
-	response, err := apiCall(endpoint.resource, apiURL(endpoint.isGraph, endpoint.urlBase, endpoint.resource, ""), authentication)
-	if err != nil {
-		return APIResults[T]{}, err
-	}
+	continuationToken := ""
 
-	err = json.Unmarshal([]byte(response), &results)
-	if err != nil {
-		return APIResults[T]{}, err
-	}
+	for {
+		loopResult := APIResults[T]{}
+		response, token, err := apiCall(endpoint.resource, apiURL(endpoint.isGraph, endpoint.urlBase, endpoint.resource, endpoint.parameters), continuationToken, authentication)
+		if err != nil {
+			return APIResults[T]{}, err
+		}
 
+		println(response)
+
+		continuationToken = token
+
+		err = json.Unmarshal([]byte(response), &loopResult)
+		if err != nil {
+			return APIResults[T]{}, err
+		}
+
+		results.Count += loopResult.Count
+		results.Value = append(results.Value, loopResult.Value...)
+
+		if continuationToken == "" {
+			break
+		}
+
+	}
 	return results, nil
 
 }

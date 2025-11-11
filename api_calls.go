@@ -100,9 +100,9 @@ func getTeams(organizationUrl string, authentication string, wg *sync.WaitGroup)
 	defer wg.Done()
 
 	endpoint := "teams"
-	parameters := "&$expandIdentity=true"
+	parameters := "$expandIdentity=true"
 
-	response, err := apiCall(endpoint, apiURL(false, organizationUrl, endpoint, parameters), authentication)
+	response, _, err := apiCall(endpoint, apiURL(false, organizationUrl, endpoint, parameters), "", authentication)
 	if err != nil {
 		println(err)
 	}

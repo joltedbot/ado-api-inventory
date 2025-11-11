@@ -23,7 +23,7 @@ func main() {
 	adoToken := getADOToken(environment.TenantId, environment.ClientId, environment.ClientSecret)
 
 	var wg sync.WaitGroup
-	wg.Add(4)
+	wg.Add(1)
 	go getUsers(environment.Organization, adoToken, &wg)
 	go getProjects(environment.Organization, adoToken, &wg)
 	go getTeams(environment.Organization, adoToken, &wg)
