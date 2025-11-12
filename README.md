@@ -1,5 +1,9 @@
 # ado-api-inventory
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Go Version](https://img.shields.io/badge/Go-1.21%2B-blue)](https://golang.org/dl/)
+[![Go Report Card](https://goreportcard.com/badge/github.com/joltedbot/ado-api-inventory)](https://goreportcard.com/report/github.com/joltedbot/ado-api-inventory)
+
 A Go utility for inventorying Azure DevOps organizations to assist in assessments and migrations. This tool pulls and catalogs the most relevant objects from your Azure DevOps tenant and exports them to CSV format for analysis.
 
 ## Overview
