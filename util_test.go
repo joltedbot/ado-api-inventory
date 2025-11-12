@@ -28,15 +28,21 @@ func TestApiURL(t *testing.T) {
 func TestWriteToFile(t *testing.T) {
 	testFile := "testfile.txt"
 	testData := "hello world"
-	os.Mkdir(OUTPUT_DIRECTORY, 0755)
+
+	err := os.Mkdir(OUTPUT_DIRECTORY, 0755)
+	if err != nil && !os.IsExist(err) {
+		t.Fatalf("Failed to create output directory: %v", err)
+	}
+
 	writeToFile(testFile, testData)
 
-	// Check file exists and contents
 	f, err := os.Open(OUTPUT_DIRECTORY + "/" + testFile)
+
 	if err != nil {
 		t.Fatalf("writeToFile did not create file: %v", err)
 	}
-	defer f.Close()
+
+	defer deferCloseFile(f)
 	buf := make([]byte, len(testData))
 	_, err = f.Read(buf)
 	if err != nil {
@@ -45,7 +51,11 @@ func TestWriteToFile(t *testing.T) {
 	if string(buf) != testData {
 		t.Errorf("writeToFile contents = %v, want %v", string(buf), testData)
 	}
-	os.Remove(OUTPUT_DIRECTORY + "/" + testFile)
+
+	err = os.Remove(OUTPUT_DIRECTORY + "/" + testFile)
+	if err != nil {
+		t.Fatalf("Failed to remove test file, remove it manually: %v", err)
+	}
 }
 
 func TestNewSecureHTTPClient(t *testing.T) {

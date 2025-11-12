@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -40,12 +41,12 @@ func apiCall(name string, url string, continuationToken string, authentication s
 
 	secureClient := newSecureHTTPClient()
 
-	resp, _ := secureClient.Do(req)
+	resp, err := secureClient.Do(req)
 	if err != nil {
 		return "", "", err
 	}
 
-	defer resp.Body.Close()
+	defer deferCloseResponseBody(resp.Body)
 
 	fmt.Println(name+" status:", resp.Status)
 
@@ -71,7 +72,7 @@ func writeToFile(fileName string, data string) {
 		println(err)
 	}
 
-	defer file.Close()
+	defer deferCloseFile(file)
 
 	_, err = file.WriteString(data)
 	if err != nil {
@@ -89,8 +90,6 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 		if err != nil {
 			return APIResults[T]{}, err
 		}
-
-		println(response)
 
 		continuationToken = token
 
@@ -121,5 +120,19 @@ func newSecureHTTPClient() *http.Client {
 			MaxIdleConns:    10,
 			IdleConnTimeout: 120 * time.Second,
 		},
+	}
+}
+
+func deferCloseFile(file *os.File) {
+	err := file.Close()
+	if err != nil {
+		println("Error closing file:", err)
+	}
+}
+
+func deferCloseResponseBody(body io.ReadCloser) {
+	err := body.Close()
+	if err != nil {
+		println("Error closing HTTP response body:", err)
 	}
 }

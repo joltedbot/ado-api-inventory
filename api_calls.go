@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"sync"
 )
@@ -99,22 +98,32 @@ func getRepositories(organizationUrl string, authentication string, wg *sync.Wai
 func getTeams(organizationUrl string, authentication string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	endpoint := "teams"
-	parameters := "$expandIdentity=true"
-
-	response, _, err := apiCall(endpoint, apiURL(false, organizationUrl, endpoint, parameters), "", authentication)
-	if err != nil {
-		println(err)
-	}
-
 	teamsList := APIResults[teams]{
 		Value: []teams{},
 	}
 
-	err = json.Unmarshal([]byte(response), &teamsList)
+	endpoint := EndPoint{
+		resource:   "teams",
+		parameters: "$expandIdentity=true",
+		urlBase:    organizationUrl,
+		isGraph:    false,
+	}
+
+	teamsList, err := getEndpointStruct(endpoint, teamsList, authentication)
 	if err != nil {
 		println(err)
 	}
+	/*
+
+			response, _, err := apiCall(endpoint, apiURL(false, organizationUrl, endpoint, parameters), "", authentication)
+		if err != nil {
+			println(err)
+		}
+			err = json.Unmarshal([]byte(response), &teamsList)
+			if err != nil {
+				println(err)
+			}
+	*/
 
 	teamsFileName := "teams.csv"
 	teamsIdentityFileName := "teams-identities.csv"

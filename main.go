@@ -15,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = os.Mkdir(OUTPUT_DIRECTORY, 0755)
+	err = os.Mkdir(OUTPUT_DIRECTORY, 0700)
 	if err != nil && !os.IsExist(err) {
 		panic(err)
 	}
@@ -23,7 +23,7 @@ func main() {
 	adoToken := getADOToken(environment.TenantId, environment.ClientId, environment.ClientSecret)
 
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(4)
 	go getUsers(environment.Organization, adoToken, &wg)
 	go getProjects(environment.Organization, adoToken, &wg)
 	go getTeams(environment.Organization, adoToken, &wg)
