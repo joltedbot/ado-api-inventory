@@ -88,12 +88,7 @@ The tool will:
 
 ### Output
 
-Exported CSV files are created in the `output/` directory:
-
-- `users.csv` - User accounts and identities
-- `teams.csv` - Team definitions
-- `projects.csv` - Project information
-- `repositories.csv` - Repository details
+Inventory data is exported as CSV files the `output/` directory:
 
 ## Dependencies
 
