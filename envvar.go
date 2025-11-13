@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/go-playground/validator/v10"
@@ -26,6 +27,7 @@ func getAndValidateEnvVars() (EnvVars, error) {
 
 	err := validate.Struct(environment)
 	if err != nil {
+		log.Println(err)
 		return EnvVars{}, err
 	}
 

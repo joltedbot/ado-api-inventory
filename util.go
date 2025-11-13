@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -69,14 +70,14 @@ func apiCall(name string, url string, continuationToken string, authentication s
 func writeToFile(fileName string, data string) {
 	file, err := os.Create(OUTPUT_DIRECTORY + "/" + fileName)
 	if err != nil {
-		println(err)
+		log.Println(err)
 	}
 
 	defer deferCloseFile(file)
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		println(err)
+		log.Println(err)
 	}
 }
 
@@ -86,6 +87,7 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 
 	for {
 		loopResult := APIResults[T]{}
+
 		response, token, err := apiCall(endpoint.resource, apiURL(endpoint.isGraph, endpoint.urlBase, endpoint.resource, endpoint.parameters), continuationToken, authentication)
 		if err != nil {
 			return APIResults[T]{}, err
@@ -126,13 +128,13 @@ func newSecureHTTPClient() *http.Client {
 func deferCloseFile(file *os.File) {
 	err := file.Close()
 	if err != nil {
-		println("Error closing file:", err)
+		log.Println(err)
 	}
 }
 
 func deferCloseResponseBody(body io.ReadCloser) {
 	err := body.Close()
 	if err != nil {
-		println("Error closing HTTP response body:", err)
+		log.Println(err)
 	}
 }

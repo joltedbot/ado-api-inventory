@@ -14,11 +14,28 @@ type EndPoint struct {
 
 type users struct {
 	Descriptor    string `json:"descriptor"`
+	Description   string `json:"description"`
 	DisplayName   string `json:"displayname"`
 	PrincipalName string `json:"principalname"`
 	MailAddress   string `json:"mailaddress"`
 	SubjectKind   string `json:"subjectkind"`
 	Domain        string `json:"domain"`
+	Origin        string `json:"origin"`
+	OriginId      string `json:"originid"`
+	URL           string `json:"url"`
+}
+
+type groups struct {
+	Descriptor    string `json:"descriptor"`
+	Description   string `json:"description"`
+	DisplayName   string `json:"displayname"`
+	PrincipalName string `json:"principalname"`
+	MailAddress   string `json:"mailaddress"`
+	SubjectKind   string `json:"subjectkind"`
+	Domain        string `json:"domain"`
+	Origin        string `json:"origin"`
+	OriginId      string `json:"originid"`
+	URL           string `json:"url"`
 }
 
 type project struct {
@@ -31,6 +48,17 @@ type project struct {
 	URL         string `json:"url"`
 }
 
+type pipelines struct {
+	Id            int    `json:"id"`
+	Name          string `json:"name"`
+	Folder        string `json:"folder"`
+	Revision      int    `json:"revision"`
+	URL           string `json:"url"`
+	Configuration struct {
+		Type string `json:"type"`
+	}
+}
+
 type teams struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
@@ -39,20 +67,6 @@ type teams struct {
 	ProjectName string `json:"projectname"`
 	URL         string `json:"url"`
 	IdentityUrl string `json:"identityurl"`
-	Identity    struct {
-		CustomDisplayName   string   `json:"customdisplayname"`
-		Descriptor          string   `json:"descriptor"`
-		Id                  string   `json:"id"`
-		IsActive            bool     `json:"isactive"`
-		IsContainer         bool     `json:"iscontainer"`
-		MasterId            string   `json:"masterid"`
-		MemberIds           []string `json:"memberids"`
-		MemberOf            []string `json:"memberof"`
-		Members             []string `json:"members"`
-		ProviderDisplayName string   `json:"providerDisplayName"`
-		SubjectDescriptor   string   `json:"subjectdescriptor"`
-		UniqueUserId        string   `json:"uniqueuserid"` //nolint:govet
-	} `json:"identity"`
 }
 
 type repository struct {
@@ -75,4 +89,10 @@ type repository struct {
 	Project struct {
 		Id string `json:"id"`
 	} `json:"project"`
+}
+
+type boards struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }

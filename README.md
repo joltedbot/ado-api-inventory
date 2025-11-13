@@ -14,10 +14,13 @@ A Go utility for inventorying Azure DevOps organizations to assist in assessment
 
 Currently supported inventory items:
 
-- **Users**: User accounts and identities in your organization
-- **Teams**: Team definitions and organizational structure
-- **Projects**: Azure DevOps projects
-- **Repositories**: Git repositories across projects
+- **Users**
+- **Teams**
+- **Groups**
+- **Projects**
+- **Repositories**
+- **Pipelines**
+- **Boards**
 
 Additional endpoints will be added as the tool matures.
 

@@ -22,12 +22,17 @@ func main() {
 
 	adoToken := getADOToken(environment.TenantId, environment.ClientId, environment.ClientSecret)
 
+	projectIDs := getProjects(environment.Organization, adoToken)
+
 	var wg sync.WaitGroup
-	wg.Add(4)
+	wg.Add(6)
+
 	go getUsers(environment.Organization, adoToken, &wg)
-	go getProjects(environment.Organization, adoToken, &wg)
+	go getGroups(environment.Organization, adoToken, &wg)
 	go getTeams(environment.Organization, adoToken, &wg)
-	go getRepositories(environment.Organization, adoToken, &wg)
+	go getRepositories(environment.Organization, adoToken, projectIDs, &wg)
+	go getPipelines(environment.Organization, adoToken, projectIDs, &wg)
+	go getBoards(environment.Organization, adoToken, projectIDs, &wg)
 
 	wg.Wait()
 
