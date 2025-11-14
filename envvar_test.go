@@ -19,6 +19,8 @@ func TestGetAndValidateEnvVarsValid(t *testing.T) {
 }
 
 func TestGetAndValidateEnvVarsInvalid(t *testing.T) {
+	defer suppressTestOutput()()
+
 	_ = os.Setenv("ADO_TENANT_ID", "12345")
 	_ = os.Setenv("ADO_CLIENT_ID", "12345")
 	_ = os.Setenv("ADO_CLIENT_SECRET", "12345")

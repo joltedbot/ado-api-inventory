@@ -14,7 +14,7 @@ func TestApiURL(t *testing.T) {
 		expectedPrefix  string
 	}{
 		{false, "org", "projects", "", "https://dev.azure.com/org/_apis/projects?api-version=7.2-preview"},
-		{true, "org", "graph/users", "&top=10", "https://vssps.dev.azure.com/org/_apis/graph/users?api-version=7.2-preview&top=10"},
+		{true, "org", "graph/users", "top=10", "https://vssps.dev.azure.com/org/_apis/graph/users?api-version=7.2-preview&top=10"},
 	}
 
 	for _, tt := range tests {
@@ -34,7 +34,7 @@ func TestWriteToFile(t *testing.T) {
 		t.Fatalf("Failed to create output directory: %v", err)
 	}
 
-	writeToFile(testFile, testData)
+	writeToFile(testFile, testData, false)
 
 	f, err := os.Open(OUTPUT_DIRECTORY + "/" + testFile)
 

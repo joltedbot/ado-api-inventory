@@ -22,7 +22,11 @@ func main() {
 
 	adoToken := getADOToken(environment.TenantId, environment.ClientId, environment.ClientSecret)
 
-	projectIDs := getProjects(environment.Organization, adoToken)
+	projectIDs, err := getProjects(environment.Organization, adoToken)
+
+	if err != nil {
+		panic("Could not retrieve Project data and can not continue processings. Exiting.")
+	}
 
 	var wg sync.WaitGroup
 	wg.Add(6)

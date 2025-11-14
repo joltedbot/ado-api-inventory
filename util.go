@@ -67,18 +67,32 @@ func apiCall(name string, url string, continuationToken string, authentication s
 	return responseBody, continuationHeader, nil
 }
 
-func writeToFile(fileName string, data string) {
-	file, err := os.Create(OUTPUT_DIRECTORY + "/" + fileName)
+func writeToFile(fileName string, data string, append bool) error {
+
+	filePath := OUTPUT_DIRECTORY + "/" + fileName
+	var file *os.File
+	var err error
+
+	if append {
+		file, err = os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0640)
+	} else {
+		file, err = os.Create(filePath)
+	}
+
 	if err != nil {
-		log.Println(err)
+		return err
 	}
 
 	defer deferCloseFile(file)
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+
+	err = file.Sync()
+
+	return err
 }
 
 func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authentication string) (APIResults[T], error) {
@@ -112,6 +126,36 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 
 }
 
+func fetchAndExport[T any](
+	endpoint EndPoint,
+	authentication string,
+	iteration int,
+	formatRow func(T) string,
+) error {
+	result := APIResults[T]{Value: []T{}}
+
+	result, err := getEndpointStruct(endpoint, result, authentication)
+	if err != nil {
+		log.Printf("getEndpointStruct(): %s - %s\n", endpoint.resource, err)
+		return err
+	}
+
+	var output string
+	fileAppend := true
+
+	if iteration == 0 {
+		output = endpoint.headerRow + "\n"
+		fileAppend = false
+	}
+
+	for _, item := range result.Value {
+		output += formatRow(item)
+	}
+
+	err = writeToFile(endpoint.fileName, output, fileAppend)
+	return err
+}
+
 func newSecureHTTPClient() *http.Client {
 	return &http.Client{
 		Timeout: 30 * time.Second,
@@ -136,5 +180,20 @@ func deferCloseResponseBody(body io.ReadCloser) {
 	err := body.Close()
 	if err != nil {
 		log.Println(err)
+	}
+}
+
+func suppressTestOutput() func() {
+	null, _ := os.Open(os.DevNull)
+	sout := os.Stdout
+	serr := os.Stderr
+	os.Stdout = null
+	os.Stderr = null
+	log.SetOutput(null)
+	return func() {
+		defer null.Close()
+		os.Stdout = sout
+		os.Stderr = serr
+		log.SetOutput(os.Stderr)
 	}
 }

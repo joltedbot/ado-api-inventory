@@ -8,6 +8,8 @@ type APIResults[T any] struct {
 type EndPoint struct {
 	resource   string
 	parameters string
+	fileName   string
+	headerRow  string
 	urlBase    string
 	isGraph    bool
 }
