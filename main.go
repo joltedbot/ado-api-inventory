@@ -29,7 +29,7 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(6)
+	wg.Add(7)
 
 	go getUsers(environment.Organization, adoToken, &wg)
 	go getGroups(environment.Organization, adoToken, &wg)
@@ -37,6 +37,7 @@ func main() {
 	go getRepositories(environment.Organization, adoToken, projectIDs, &wg)
 	go getPipelines(environment.Organization, adoToken, projectIDs, &wg)
 	go getBoards(environment.Organization, adoToken, projectIDs, &wg)
+	go getTestPlans(environment.Organization, adoToken, projectIDs, &wg)
 
 	wg.Wait()
 

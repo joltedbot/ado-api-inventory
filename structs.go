@@ -98,3 +98,41 @@ type boards struct {
 	Name string `json:"name"`
 	URL  string `json:"url"`
 }
+
+type testPlan struct {
+	Id              int    `json:"id"`
+	Name            string `json:"name"`
+	AreaPath        string `json:"areapath"`
+	BuildDefinition struct {
+		Id   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"buildDefinition"`
+	Buildid     int    `json:"buildid"`
+	Description string `json:"description"`
+	Owner       struct {
+		Id         int    `json:"id"`
+		Descriptor string `json:"descriptor"`
+	} `json:"owner"`
+	PreviousBuildId              int `json:"previousBuildId"`
+	ReleaseEnvironmentDefinition struct {
+		DefinitionID            int    `json:"definitionid"`
+		EnvironmentDefinitionId string `json:"environmentDefinitionId"`
+	} `json:"releaseEnvironmentDefinition"`
+	Revision  int `json:"revision"`
+	RootSuite struct {
+		Id   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"rootSuite"`
+	StartDate string `json:"startDate"`
+	EndDate   string `json:"endDate"`
+	State     string `json:"state"`
+	UpdatedBy struct {
+		Id         int    `json:"id"`
+		Descriptor string `json:"descriptor"`
+	} `json:"updatedBy"`
+	UpdatedDate          string `json:"updatedDate"`
+	YamlReleaseReference struct {
+		DefinitionID int    `json:"definitionid"`
+		StagesToSkip string `json:"stagesToSkip"`
+	} `json:"yamlReleaseReference"`
+}

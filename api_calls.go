@@ -187,3 +187,31 @@ func getBoards(organizationUrl string, authentication string, projectIDs []strin
 	}
 
 }
+
+func getTestPlans(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for index, projectID := range projectIDs {
+
+		endpoint := EndPoint{
+			resource:   "testplan/plans",
+			parameters: "filterActivePlans=true",
+			fileName:   "testplans.csv",
+			headerRow:  "Id,Name,Area Path,Build Definition ID,Build Definition Name,Build ID,Description,Owner.ID,Owner Descriptor,Previous Build ID,Release Environment Definition ID,Environment Definition ID,Revision,Root Suite ID,Root Suite Name,Start Date,End Date,State,Updated By ID, Updated By Descriptor,Updated Date,Yaml Release Reference Definition ID,Yaml Release Reference Definition Stages To Skip",
+			urlBase:    organizationUrl + "/" + projectID,
+			isGraph:    false,
+		}
+
+		err := fetchAndExport(endpoint, authentication, index,
+			func(testplan testPlan) string {
+				return fmt.Sprintf("%d,%s,%s,%d,%s,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s,%s,%s,%d,%s,%s,%d,%s\n", testplan.Id, testplan.Name, testplan.AreaPath, testplan.BuildDefinition.Id, testplan.BuildDefinition.Name, testplan.Buildid, testplan.Description, testplan.Owner.Id, testplan.Owner.Descriptor, testplan.PreviousBuildId, testplan.ReleaseEnvironmentDefinition.DefinitionID, testplan.ReleaseEnvironmentDefinition.EnvironmentDefinitionId, testplan.Revision, testplan.RootSuite.Id, testplan.RootSuite.Name, testplan.StartDate, testplan.EndDate, testplan.State, testplan.UpdatedBy.Id, testplan.UpdatedBy.Descriptor, testplan.UpdatedDate, testplan.YamlReleaseReference.DefinitionID, testplan.YamlReleaseReference.StagesToSkip)
+			},
+		)
+
+		if err != nil {
+			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+		}
+
+	}
+
+}
