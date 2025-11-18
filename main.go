@@ -29,11 +29,12 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(7)
+	wg.Add(8)
 
 	go getUsers(environment.Organization, adoToken, &wg)
 	go getGroups(environment.Organization, adoToken, &wg)
 	go getTeams(environment.Organization, adoToken, &wg)
+	go getWiki(environment.Organization, adoToken, &wg)
 	go getRepositories(environment.Organization, adoToken, projectIDs, &wg)
 	go getPipelines(environment.Organization, adoToken, projectIDs, &wg)
 	go getBoards(environment.Organization, adoToken, projectIDs, &wg)

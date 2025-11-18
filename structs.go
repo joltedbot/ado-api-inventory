@@ -136,3 +136,15 @@ type testPlan struct {
 		StagesToSkip string `json:"stagesToSkip"`
 	} `json:"yamlReleaseReference"`
 }
+
+type wikis struct {
+	Id           string `json:"id"`
+	Name         string `json:"name"`
+	IsDisabled   bool   `json:"isDisabled"`
+	MappedPath   string `json:"mappedPath"`
+	Projectid    string `json:"projectid"`
+	RemoteUrl    string `json:"remoteUrl"`
+	RepositoryID string `json:"repositoryid"`
+	Type         string `json:"type"`
+	URL          string `json:"url"`
+}

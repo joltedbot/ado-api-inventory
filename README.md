@@ -21,6 +21,8 @@ Currently supported inventory items:
 - **Repositories**
 - **Pipelines**
 - **Boards**
+- **Test Plans**
+- **Wikis**
 
 Additional endpoints will be added as the tool matures.
 

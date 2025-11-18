@@ -215,3 +215,26 @@ func getTestPlans(organizationUrl string, authentication string, projectIDs []st
 	}
 
 }
+
+func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	endpoint := EndPoint{
+		resource:   "wiki/wikis",
+		parameters: "",
+		fileName:   "wiki.csv",
+		headerRow:  "ID,Name,Is Disabled,Mapped Path,Project ID,Remote URL,Repository ID,Type,URL",
+		urlBase:    organizationUrl,
+		isGraph:    false,
+	}
+
+	err := fetchAndExport(endpoint, authentication, 0,
+		func(wiki wikis) string {
+			return fmt.Sprintf("%s,%s,%t,%s,%s,%s,%s,%s,%s\n", wiki.Id, wiki.Name, wiki.IsDisabled, wiki.MappedPath, wiki.Projectid, wiki.RemoteUrl, wiki.RepositoryID, wiki.Type, wiki.URL)
+		},
+	)
+
+	if err != nil {
+		log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+	}
+}
