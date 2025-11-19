@@ -150,8 +150,12 @@ type wikis struct {
 }
 
 type artifactFeeds struct {
-	Id                           string `json:"id"`
-	Name                         string `json:"name"`
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Project struct {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"project"`
 	BadgesEnabled                bool   `json:"badgesEnabled"`
 	Capabilities                 string `json:"capabilities"`
 	DefaultViewId                string `json:"defaultViewId"`

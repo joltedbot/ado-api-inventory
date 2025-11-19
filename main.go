@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"sync"
 )
@@ -28,7 +29,12 @@ func main() {
 		panic("Could not retrieve Project data and can not continue processings. Exiting.")
 	}
 
+	fmt.Println("----------------------------------------")
+	fmt.Println("       API Call Return Statuses         ")
+	fmt.Println("----------------------------------------")
+
 	var wg sync.WaitGroup
+
 	wg.Add(9)
 
 	go getUsers(environment.Organization, adoToken, &wg)
@@ -40,6 +46,6 @@ func main() {
 	go getBoards(environment.Organization, adoToken, projectIDs, &wg)
 	go getTestPlans(environment.Organization, adoToken, projectIDs, &wg)
 	go getArtifactFeeds(environment.Organization, adoToken, projectIDs, &wg)
-	wg.Wait()
 
+	wg.Wait()
 }

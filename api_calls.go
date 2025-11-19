@@ -109,16 +109,18 @@ func getGroups(organizationUrl string, authentication string, wg *sync.WaitGroup
 func getPipelines(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	endpoint := EndPoint{
+		urlBase:      "https://dev.azure.com",
+		resource:     "pipelines",
+		parameters:   "",
+		fileName:     "pipelines.csv",
+		headerRow:    "ID, Name, Folder, Revision, Project ID, URL, Configuration Type",
+		organization: "",
+	}
+
 	for index, projectID := range projectIDs {
 
-		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com",
-			resource:     "pipelines",
-			parameters:   "",
-			fileName:     "pipelines.csv",
-			headerRow:    "ID, Name, Folder, Revision, Project ID, URL, Configuration Type",
-			organization: organizationUrl + "/" + projectID,
-		}
+		endpoint.organization = organizationUrl + "/" + projectID
 
 		err := fetchAndExport(endpoint, authentication, index,
 			func(pipeline pipelines) string {
@@ -137,15 +139,18 @@ func getPipelines(organizationUrl string, authentication string, projectIDs []st
 func getRepositories(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	endpoint := EndPoint{
+		urlBase:      "https://dev.azure.com",
+		resource:     "git/repositories",
+		parameters:   "",
+		fileName:     "repositories.csv",
+		headerRow:    "Id,Name,Project ID,Created Date,Size,Default Branch,URL,Remote URL,SSH URL,Valid Remote URLs,Web URL,Is Disabled,Is Fork,Is In Maintenance,Parent Repository ID,Project ID",
+		organization: "",
+	}
+
 	for index, projectID := range projectIDs {
-		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com",
-			resource:     "git/repositories",
-			parameters:   "",
-			fileName:     "repositories.csv",
-			headerRow:    "Id,Name,Project ID,Created Date,Size,Default Branch,URL,Remote URL,SSH URL,Valid Remote URLs,Web URL,Is Disabled,Is Fork,Is In Maintenance,Parent Repository ID,Project ID",
-			organization: organizationUrl + "/" + projectID,
-		}
+
+		endpoint.organization = organizationUrl + "/" + projectID
 
 		err := fetchAndExport(endpoint, authentication, index,
 			func(repository repository) string {
@@ -163,16 +168,18 @@ func getRepositories(organizationUrl string, authentication string, projectIDs [
 func getBoards(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	endpoint := EndPoint{
+		urlBase:      "https://dev.azure.com",
+		resource:     "work/boards",
+		parameters:   "",
+		fileName:     "boards.csv",
+		headerRow:    "ID,Name,Project ID,URL",
+		organization: "",
+	}
+
 	for index, projectID := range projectIDs {
 
-		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com",
-			resource:     "work/boards",
-			parameters:   "",
-			fileName:     "boards.csv",
-			headerRow:    "ID,Name,Project ID,URL",
-			organization: organizationUrl + "/" + projectID,
-		}
+		endpoint.organization = organizationUrl + "/" + projectID
 
 		err := fetchAndExport(endpoint, authentication, index,
 			func(board boards) string {
@@ -191,16 +198,18 @@ func getBoards(organizationUrl string, authentication string, projectIDs []strin
 func getTestPlans(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	endpoint := EndPoint{
+		urlBase:      "https://dev.azure.com",
+		resource:     "testplan/plans",
+		parameters:   "filterActivePlans=true",
+		fileName:     "testplans.csv",
+		headerRow:    "Id,Name,Area Path,Build Definition ID,Build Definition Name,Build ID,Description,Owner.ID,Owner Descriptor,Previous Build ID,Release Environment Definition ID,Environment Definition ID,Revision,Root Suite ID,Root Suite Name,Start Date,End Date,State,Updated By ID, Updated By Descriptor,Updated Date,Yaml Release Reference Definition ID,Yaml Release Reference Definition Stages To Skip",
+		organization: "",
+	}
+
 	for index, projectID := range projectIDs {
 
-		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com",
-			resource:     "testplan/plans",
-			parameters:   "filterActivePlans=true",
-			fileName:     "testplans.csv",
-			headerRow:    "Id,Name,Area Path,Build Definition ID,Build Definition Name,Build ID,Description,Owner.ID,Owner Descriptor,Previous Build ID,Release Environment Definition ID,Environment Definition ID,Revision,Root Suite ID,Root Suite Name,Start Date,End Date,State,Updated By ID, Updated By Descriptor,Updated Date,Yaml Release Reference Definition ID,Yaml Release Reference Definition Stages To Skip",
-			organization: organizationUrl + "/" + projectID,
-		}
+		endpoint.organization = organizationUrl + "/" + projectID
 
 		err := fetchAndExport(endpoint, authentication, index,
 			func(testplan testPlan) string {
@@ -242,37 +251,34 @@ func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) 
 func getArtifactFeeds(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	for index, projectID := range projectIDs {
+	endpoint := EndPoint{
+		urlBase:      "https://feeds.dev.azure.com",
+		resource:     "packaging/feeds",
+		parameters:   "",
+		fileName:     "artifact-feeds.csv",
+		headerRow:    "Id,Name,Project ID,Project Name,Badges Enabled,Capabilities,Default View ID,Deleted Date,Description,Fully Qualified ID,Fully Qualified Name,Hide Deleted Package Versions,IsEnabled,IsReadOnly,Permanent Deleted Date,Scheduled Permanent Delete Date,Upstream Enabled,Upstream Enabled Changed Date,Upstream Sources,View Id,View Name,View Type,View Visibility,View URL,View ID,View Name,URL",
+		organization: organizationUrl,
+	}
 
-		endpoint := EndPoint{
-			urlBase:      "https://feeds.dev.azure.com",
-			resource:     "packaging/feeds",
-			parameters:   "",
-			fileName:     "artifact-feeds.csv",
-			headerRow:    "Id,Name,BadgesEnabled,Capabilities,DefaultViewId,DeletedDate,Description,FullyQualifiedId,FullyQualifiedName,HideDeletedPackageVersions,IsEnabled,IsReadOnly,PermanentDeletedDate,ScheduledPermanentDeleteDate,UpstreamEnabled,UpstreamEnabledChangedDate,Upstream Sources,View Id,View Name,View Type,View Visibility,View URL,ViewId,ViewName,URL",
-			organization: organizationUrl + "/" + projectID,
-		}
+	err := fetchAndExport(endpoint, authentication, 0,
+		func(feed artifactFeeds) string {
+			var upstream string
 
-		err := fetchAndExport(endpoint, authentication, index,
-
-			func(feed artifactFeeds) string {
-				var upstream string
-				for index, stream := range feed.UpstreamSources {
-					if index == 0 {
-						upstream = upstream + stream.Name
-					} else {
-						upstream = upstream + " | " + stream.Name
-					}
-
+			for index, stream := range feed.UpstreamSources {
+				if index == 0 {
+					upstream = upstream + stream.Name
+				} else {
+					upstream = upstream + " | " + stream.Name
 				}
-				return fmt.Sprintf("%s,%s,%t,%s,%s,%s,%s,%s,%s,%t,%t,%t,%s,%s,%t,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", feed.Id, feed.Name, feed.BadgesEnabled, feed.Capabilities, feed.DefaultViewId, feed.DeletedDate, feed.Description, feed.FullyQualifiedId, feed.FullyQualifiedName, feed.HideDeletedPackageVersions, feed.IsEnabled, feed.IsReadOnly, feed.PermanentDeletedDate, feed.ScheduledPermanentDeleteDate, feed.UpstreamEnabled, feed.UpstreamEnabledChangedDate, upstream, feed.View.Id, feed.View.Name, feed.View.Type, feed.View.Visibility, feed.View.URL, feed.ViewId, feed.ViewName, feed.URL)
-			},
-		)
 
-		if err != nil {
-			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
-		}
+			}
 
+			return fmt.Sprintf("%s,%s,%s,%s,%t,%s,%s,%s,%s,%s,%s,%t,%t,%t,%s,%s,%t,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", feed.Id, feed.Name, feed.Project.Id, feed.Project.Name, feed.BadgesEnabled, feed.Capabilities, feed.DefaultViewId, feed.DeletedDate, feed.Description, feed.FullyQualifiedId, feed.FullyQualifiedName, feed.HideDeletedPackageVersions, feed.IsEnabled, feed.IsReadOnly, feed.PermanentDeletedDate, feed.ScheduledPermanentDeleteDate, feed.UpstreamEnabled, feed.UpstreamEnabledChangedDate, upstream, feed.View.Id, feed.View.Name, feed.View.Type, feed.View.Visibility, feed.View.URL, feed.ViewId, feed.ViewName, feed.URL)
+		},
+	)
+
+	if err != nil {
+		log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
 	}
 
 }
