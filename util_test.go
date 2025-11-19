@@ -7,18 +7,18 @@ import (
 
 func TestApiURL(t *testing.T) {
 	tests := []struct {
-		isGraph         bool
+		baseUrl         string
 		organizationUrl string
 		endpoint        string
 		parameters      string
 		expectedPrefix  string
 	}{
-		{false, "org", "projects", "", "https://dev.azure.com/org/_apis/projects?api-version=7.2-preview"},
-		{true, "org", "graph/users", "top=10", "https://vssps.dev.azure.com/org/_apis/graph/users?api-version=7.2-preview&top=10"},
+		{"https://dev.azure.com/", "org", "projects", "", "https://dev.azure.com/org/_apis/projects?api-version=7.2-preview"},
+		{"https://vssps.dev.azure.com/", "org", "graph/users", "top=10", "https://vssps.dev.azure.com/org/_apis/graph/users?api-version=7.2-preview&top=10"},
 	}
 
 	for _, tt := range tests {
-		got := apiURL(tt.isGraph, tt.organizationUrl, tt.endpoint, tt.parameters)
+		got := apiURL(tt.baseUrl, tt.organizationUrl, tt.endpoint, tt.parameters)
 		if got != tt.expectedPrefix {
 			t.Errorf("apiURL() = %v, want %v", got, tt.expectedPrefix)
 		}

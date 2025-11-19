@@ -12,12 +12,7 @@ import (
 	"time"
 )
 
-func apiURL(isGraph bool, organizationUrl string, endpoint string, parameters string) string {
-
-	base := "https://dev.azure.com/"
-	if isGraph {
-		base = "https://vssps.dev.azure.com/"
-	}
+func apiURL(base string, organizationUrl string, endpoint string, parameters string) string {
 
 	if parameters != "" {
 		parameters = "&" + parameters
@@ -102,7 +97,7 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 	for {
 		loopResult := APIResults[T]{}
 
-		response, token, err := apiCall(endpoint.resource, apiURL(endpoint.isGraph, endpoint.urlBase, endpoint.resource, endpoint.parameters), continuationToken, authentication)
+		response, token, err := apiCall(endpoint.resource, apiURL(endpoint.urlBase, endpoint.organization, endpoint.resource, endpoint.parameters), continuationToken, authentication)
 		if err != nil {
 			return APIResults[T]{}, err
 		}

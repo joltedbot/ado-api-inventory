@@ -6,12 +6,12 @@ type APIResults[T any] struct {
 }
 
 type EndPoint struct {
-	resource   string
-	parameters string
-	fileName   string
-	headerRow  string
-	urlBase    string
-	isGraph    bool
+	urlBase      string
+	resource     string
+	parameters   string
+	fileName     string
+	headerRow    string
+	organization string
 }
 
 type users struct {

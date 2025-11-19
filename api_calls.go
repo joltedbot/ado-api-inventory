@@ -8,12 +8,12 @@ import (
 
 func getProjects(organizationUrl string, authentication string) ([]string, error) {
 	endpoint := EndPoint{
-		resource:   "projects",
-		parameters: "",
-		fileName:   "projects.csv",
-		headerRow:  "Id,Name,Description,State,Visibility,LastUpdate,URL",
-		urlBase:    organizationUrl,
-		isGraph:    false,
+		urlBase:      "https://dev.azure.com/",
+		resource:     "projects",
+		parameters:   "",
+		fileName:     "projects.csv",
+		headerRow:    "Id,Name,Description,State,Visibility,LastUpdate,URL",
+		organization: organizationUrl,
 	}
 
 	var projectIDs []string
@@ -38,12 +38,12 @@ func getTeams(organizationUrl string, authentication string, wg *sync.WaitGroup)
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		resource:   "teams",
-		parameters: "",
-		fileName:   "teams.csv",
-		headerRow:  "Id,Name,Description,Project ID,Project Name,URL,Identity Id,Identity URL",
-		urlBase:    organizationUrl,
-		isGraph:    false,
+		urlBase:      "https://dev.azure.com/",
+		resource:     "teams",
+		parameters:   "",
+		fileName:     "teams.csv",
+		headerRow:    "Id,Name,Description,Project ID,Project Name,URL,Identity Id,Identity URL",
+		organization: organizationUrl,
 	}
 
 	err := fetchAndExport(endpoint, authentication, 0,
@@ -62,12 +62,12 @@ func getUsers(organizationUrl string, authentication string, wg *sync.WaitGroup)
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		resource:   "graph/users",
-		parameters: "",
-		fileName:   "graph-users.csv",
-		headerRow:  "Display Name, Descriptor, Description, Principal Name, Mail Address, Subject Kind, Domain, Origin, Origin ID, URL",
-		urlBase:    organizationUrl,
-		isGraph:    true,
+		urlBase:      "https://vssps.dev.azure.com/",
+		resource:     "graph/users",
+		parameters:   "",
+		fileName:     "graph-users.csv",
+		headerRow:    "Display Name, Descriptor, Description, Principal Name, Mail Address, Subject Kind, Domain, Origin, Origin ID, URL",
+		organization: organizationUrl,
 	}
 
 	err := fetchAndExport(endpoint, authentication, 0,
@@ -86,12 +86,12 @@ func getGroups(organizationUrl string, authentication string, wg *sync.WaitGroup
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		resource:   "graph/groups",
-		parameters: "",
-		fileName:   "graph-groups.csv",
-		headerRow:  "Display Name, Descriptor, Description, Principal Name, Mail Address, Subject Kind, Domain, Origin, Origin ID, URL",
-		urlBase:    organizationUrl,
-		isGraph:    true,
+		urlBase:      "https://vssps.dev.azure.com/",
+		resource:     "graph/groups",
+		parameters:   "",
+		fileName:     "graph-groups.csv",
+		headerRow:    "Display Name, Descriptor, Description, Principal Name, Mail Address, Subject Kind, Domain, Origin, Origin ID, URL",
+		organization: organizationUrl,
 	}
 
 	err := fetchAndExport(endpoint, authentication, 0,
@@ -112,12 +112,12 @@ func getPipelines(organizationUrl string, authentication string, projectIDs []st
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			resource:   "pipelines",
-			parameters: "",
-			fileName:   "pipelines.csv",
-			headerRow:  "ID, Name, Folder, Revision, Project ID, URL, Configuration Type",
-			urlBase:    organizationUrl + "/" + projectID,
-			isGraph:    false,
+			urlBase:      "https://dev.azure.com/",
+			resource:     "pipelines",
+			parameters:   "",
+			fileName:     "pipelines.csv",
+			headerRow:    "ID, Name, Folder, Revision, Project ID, URL, Configuration Type",
+			organization: organizationUrl + "/" + projectID,
 		}
 
 		err := fetchAndExport(endpoint, authentication, index,
@@ -139,12 +139,12 @@ func getRepositories(organizationUrl string, authentication string, projectIDs [
 
 	for index, projectID := range projectIDs {
 		endpoint := EndPoint{
-			resource:   "git/repositories",
-			parameters: "",
-			fileName:   "repositories.csv",
-			headerRow:  "Id,Name,Project ID,Created Date,Size,Default Branch,URL,Remote URL,SSH URL,Valid Remote URLs,Web URL,Is Disabled,Is Fork,Is In Maintenance,Parent Repository ID,Project ID",
-			urlBase:    organizationUrl + "/" + projectID,
-			isGraph:    false,
+			urlBase:      "https://dev.azure.com/",
+			resource:     "git/repositories",
+			parameters:   "",
+			fileName:     "repositories.csv",
+			headerRow:    "Id,Name,Project ID,Created Date,Size,Default Branch,URL,Remote URL,SSH URL,Valid Remote URLs,Web URL,Is Disabled,Is Fork,Is In Maintenance,Parent Repository ID,Project ID",
+			organization: organizationUrl + "/" + projectID,
 		}
 
 		err := fetchAndExport(endpoint, authentication, index,
@@ -166,12 +166,12 @@ func getBoards(organizationUrl string, authentication string, projectIDs []strin
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			resource:   "work/boards",
-			parameters: "",
-			fileName:   "boards.csv",
-			headerRow:  "ID,Name,Project ID,URL",
-			urlBase:    organizationUrl + "/" + projectID,
-			isGraph:    false,
+			urlBase:      "https://dev.azure.com/",
+			resource:     "work/boards",
+			parameters:   "",
+			fileName:     "boards.csv",
+			headerRow:    "ID,Name,Project ID,URL",
+			organization: organizationUrl + "/" + projectID,
 		}
 
 		err := fetchAndExport(endpoint, authentication, index,
@@ -194,12 +194,12 @@ func getTestPlans(organizationUrl string, authentication string, projectIDs []st
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			resource:   "testplan/plans",
-			parameters: "filterActivePlans=true",
-			fileName:   "testplans.csv",
-			headerRow:  "Id,Name,Area Path,Build Definition ID,Build Definition Name,Build ID,Description,Owner.ID,Owner Descriptor,Previous Build ID,Release Environment Definition ID,Environment Definition ID,Revision,Root Suite ID,Root Suite Name,Start Date,End Date,State,Updated By ID, Updated By Descriptor,Updated Date,Yaml Release Reference Definition ID,Yaml Release Reference Definition Stages To Skip",
-			urlBase:    organizationUrl + "/" + projectID,
-			isGraph:    false,
+			urlBase:      "https://dev.azure.com/",
+			resource:     "testplan/plans",
+			parameters:   "filterActivePlans=true",
+			fileName:     "testplans.csv",
+			headerRow:    "Id,Name,Area Path,Build Definition ID,Build Definition Name,Build ID,Description,Owner.ID,Owner Descriptor,Previous Build ID,Release Environment Definition ID,Environment Definition ID,Revision,Root Suite ID,Root Suite Name,Start Date,End Date,State,Updated By ID, Updated By Descriptor,Updated Date,Yaml Release Reference Definition ID,Yaml Release Reference Definition Stages To Skip",
+			organization: organizationUrl + "/" + projectID,
 		}
 
 		err := fetchAndExport(endpoint, authentication, index,
@@ -220,12 +220,12 @@ func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) 
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		resource:   "wiki/wikis",
-		parameters: "",
-		fileName:   "wiki.csv",
-		headerRow:  "ID,Name,Is Disabled,Mapped Path,Project ID,Remote URL,Repository ID,Type,URL",
-		urlBase:    organizationUrl,
-		isGraph:    false,
+		urlBase:      "https://dev.azure.com/",
+		resource:     "wiki/wikis",
+		parameters:   "",
+		fileName:     "wiki.csv",
+		headerRow:    "ID,Name,Is Disabled,Mapped Path,Project ID,Remote URL,Repository ID,Type,URL",
+		organization: organizationUrl,
 	}
 
 	err := fetchAndExport(endpoint, authentication, 0,
