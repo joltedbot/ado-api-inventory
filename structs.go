@@ -148,3 +148,35 @@ type wikis struct {
 	Type         string `json:"type"`
 	URL          string `json:"url"`
 }
+
+type artifactFeeds struct {
+	Id                           string `json:"id"`
+	Name                         string `json:"name"`
+	BadgesEnabled                bool   `json:"badgesEnabled"`
+	Capabilities                 string `json:"capabilities"`
+	DefaultViewId                string `json:"defaultViewId"`
+	DeletedDate                  string `json:"deletedDate"`
+	Description                  string `json:"description"`
+	FullyQualifiedId             string `json:"fullyQualifiedId"`
+	FullyQualifiedName           string `json:"fullyQualifiedName"`
+	HideDeletedPackageVersions   bool   `json:"hideDeletedPackageVersions"`
+	IsEnabled                    bool   `json:"isEnabled"`
+	IsReadOnly                   bool   `json:"isReadOnly"`
+	PermanentDeletedDate         string `json:"permanentDeletedDate"`
+	ScheduledPermanentDeleteDate string `json:"scheduledPermanentDeleteDate"`
+	UpstreamEnabled              bool   `json:"upstreamEnabled"`
+	UpstreamEnabledChangedDate   string `json:"upstreamEnabledChangedDate"`
+	UpstreamSources              []struct {
+		Name string `json:"name"`
+	} `json:"upstreamSources"`
+	View struct {
+		Id         string `json:"id"`
+		Name       string `json:"name"`
+		Type       string `json:"type"`
+		Visibility string `json:"visibility"`
+		URL        string `json:"url"`
+	} `json:"feedView"`
+	ViewId   string `json:"viewId"`
+	ViewName string `json:"viewName"`
+	URL      string `json:"url"`
+}

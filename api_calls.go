@@ -8,7 +8,7 @@ import (
 
 func getProjects(organizationUrl string, authentication string) ([]string, error) {
 	endpoint := EndPoint{
-		urlBase:      "https://dev.azure.com/",
+		urlBase:      "https://dev.azure.com",
 		resource:     "projects",
 		parameters:   "",
 		fileName:     "projects.csv",
@@ -38,7 +38,7 @@ func getTeams(organizationUrl string, authentication string, wg *sync.WaitGroup)
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		urlBase:      "https://dev.azure.com/",
+		urlBase:      "https://dev.azure.com",
 		resource:     "teams",
 		parameters:   "",
 		fileName:     "teams.csv",
@@ -62,7 +62,7 @@ func getUsers(organizationUrl string, authentication string, wg *sync.WaitGroup)
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		urlBase:      "https://vssps.dev.azure.com/",
+		urlBase:      "https://vssps.dev.azure.com",
 		resource:     "graph/users",
 		parameters:   "",
 		fileName:     "graph-users.csv",
@@ -86,7 +86,7 @@ func getGroups(organizationUrl string, authentication string, wg *sync.WaitGroup
 	defer wg.Done()
 
 	endpoint := EndPoint{
-		urlBase:      "https://vssps.dev.azure.com/",
+		urlBase:      "https://vssps.dev.azure.com",
 		resource:     "graph/groups",
 		parameters:   "",
 		fileName:     "graph-groups.csv",
@@ -112,7 +112,7 @@ func getPipelines(organizationUrl string, authentication string, projectIDs []st
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com/",
+			urlBase:      "https://dev.azure.com",
 			resource:     "pipelines",
 			parameters:   "",
 			fileName:     "pipelines.csv",
@@ -139,7 +139,7 @@ func getRepositories(organizationUrl string, authentication string, projectIDs [
 
 	for index, projectID := range projectIDs {
 		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com/",
+			urlBase:      "https://dev.azure.com",
 			resource:     "git/repositories",
 			parameters:   "",
 			fileName:     "repositories.csv",
@@ -166,7 +166,7 @@ func getBoards(organizationUrl string, authentication string, projectIDs []strin
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com/",
+			urlBase:      "https://dev.azure.com",
 			resource:     "work/boards",
 			parameters:   "",
 			fileName:     "boards.csv",
@@ -194,7 +194,7 @@ func getTestPlans(organizationUrl string, authentication string, projectIDs []st
 	for index, projectID := range projectIDs {
 
 		endpoint := EndPoint{
-			urlBase:      "https://dev.azure.com/",
+			urlBase:      "https://dev.azure.com",
 			resource:     "testplan/plans",
 			parameters:   "filterActivePlans=true",
 			fileName:     "testplans.csv",
@@ -237,4 +237,42 @@ func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) 
 	if err != nil {
 		log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
 	}
+}
+
+func getArtifactFeeds(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for index, projectID := range projectIDs {
+
+		endpoint := EndPoint{
+			urlBase:      "https://feeds.dev.azure.com",
+			resource:     "packaging/feeds",
+			parameters:   "",
+			fileName:     "artifact-feeds.csv",
+			headerRow:    "Id,Name,BadgesEnabled,Capabilities,DefaultViewId,DeletedDate,Description,FullyQualifiedId,FullyQualifiedName,HideDeletedPackageVersions,IsEnabled,IsReadOnly,PermanentDeletedDate,ScheduledPermanentDeleteDate,UpstreamEnabled,UpstreamEnabledChangedDate,Upstream Sources,View Id,View Name,View Type,View Visibility,View URL,ViewId,ViewName,URL",
+			organization: organizationUrl + "/" + projectID,
+		}
+
+		err := fetchAndExport(endpoint, authentication, index,
+
+			func(feed artifactFeeds) string {
+				var upstream string
+				for index, stream := range feed.UpstreamSources {
+					if index == 0 {
+						upstream = upstream + stream.Name
+					} else {
+						upstream = upstream + " | " + stream.Name
+					}
+
+				}
+				return fmt.Sprintf("%s,%s,%t,%s,%s,%s,%s,%s,%s,%t,%t,%t,%s,%s,%t,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", feed.Id, feed.Name, feed.BadgesEnabled, feed.Capabilities, feed.DefaultViewId, feed.DeletedDate, feed.Description, feed.FullyQualifiedId, feed.FullyQualifiedName, feed.HideDeletedPackageVersions, feed.IsEnabled, feed.IsReadOnly, feed.PermanentDeletedDate, feed.ScheduledPermanentDeleteDate, feed.UpstreamEnabled, feed.UpstreamEnabledChangedDate, upstream, feed.View.Id, feed.View.Name, feed.View.Type, feed.View.Visibility, feed.View.URL, feed.ViewId, feed.ViewName, feed.URL)
+			},
+		)
+
+		if err != nil {
+			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+		}
+
+	}
+
 }

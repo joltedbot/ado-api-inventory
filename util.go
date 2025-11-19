@@ -18,7 +18,7 @@ func apiURL(base string, organizationUrl string, endpoint string, parameters str
 		parameters = "&" + parameters
 	}
 
-	return base + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview" + parameters
+	return base + "/" + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview" + parameters
 
 }
 

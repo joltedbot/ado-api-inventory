@@ -23,6 +23,7 @@ Currently supported inventory items:
 - **Boards**
 - **Test Plans**
 - **Wikis**
+- **Artifact Feeds**
 
 Additional endpoints will be added as the tool matures.
 
