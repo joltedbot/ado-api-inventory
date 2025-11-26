@@ -41,11 +41,11 @@ func main() {
 	go getGroups(environment.Organization, adoToken, &wg)
 	go getTeams(environment.Organization, adoToken, &wg)
 	go getWiki(environment.Organization, adoToken, &wg)
+	go getArtifactFeeds(environment.Organization, adoToken, &wg)
 	go getRepositories(environment.Organization, adoToken, projectIDs, &wg)
 	go getPipelines(environment.Organization, adoToken, projectIDs, &wg)
 	go getBoards(environment.Organization, adoToken, projectIDs, &wg)
 	go getTestPlans(environment.Organization, adoToken, projectIDs, &wg)
-	go getArtifactFeeds(environment.Organization, adoToken, projectIDs, &wg)
 
 	wg.Wait()
 }

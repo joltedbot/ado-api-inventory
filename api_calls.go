@@ -248,7 +248,7 @@ func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) 
 	}
 }
 
-func getArtifactFeeds(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
+func getArtifactFeeds(organizationUrl string, authentication string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	endpoint := EndPoint{
