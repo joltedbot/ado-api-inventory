@@ -184,3 +184,28 @@ type artifactFeeds struct {
 	ViewName string `json:"viewName"`
 	URL      string `json:"url"`
 }
+
+type environments struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	CreatedBy   struct {
+		Id          string `json:"id"`
+		DisplayName string `json:"displayName"`
+		UniqueName  string `json:"uniqueName"`
+		Descriptor  string `json:"descriptor"`
+	} `json:"createdBy"`
+	CreatedOn  string `json:"createdOn"`
+	ModifiedBy struct {
+		Id          string `json:"id"`
+		DisplayName string `json:"displayName"`
+		UniqueName  string `json:"uniqueName"`
+		Descriptor  string `json:"descriptor"`
+	} `json:"modifiedBy"`
+	ModifiedOn string `json:"modifiedOn"`
+	Resource   struct {
+		Id   string `json:"id"`
+		Type string `json:"type"`
+		Name string `json:"name"`
+	} `json:"resource"`
+}
