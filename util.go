@@ -97,7 +97,9 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 	for {
 		loopResult := APIResults[T]{}
 
-		response, token, err := apiCall(endpoint.resource, apiURL(endpoint.urlBase, endpoint.organization, endpoint.resource, endpoint.parameters), continuationToken, authentication)
+		callURL := apiURL(endpoint.urlBase, endpoint.organization, endpoint.resource, endpoint.parameters)
+
+		response, token, err := apiCall(endpoint.resource, callURL, continuationToken, authentication)
 		if err != nil {
 			return APIResults[T]{}, err
 		}

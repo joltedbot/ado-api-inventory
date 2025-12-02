@@ -282,3 +282,33 @@ func getArtifactFeeds(organizationUrl string, authentication string, wg *sync.Wa
 	}
 
 }
+
+func getEnvironments(organizationUrl string, authentication string, projectIDs []string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	endpoint := EndPoint{
+		urlBase:      "https://dev.azure.com",
+		resource:     "distributedtask/environments",
+		parameters:   "",
+		fileName:     "environments.csv",
+		headerRow:    "Id,Name,Description,CreatedBy.Id,CreatedBy.DisplayName,CreatedBy.UniqueName,CreatedBy.Descriptor,CreatedOn,ModifiedBy.Id,ModifiedBy.DisplayName,ModifiedBy.UniqueName,ModifiedBy.Descriptor,ModifiedOn,Resource.Id,Resource.Type,Resource.Name",
+		organization: "",
+	}
+
+	for index, projectID := range projectIDs {
+
+		endpoint.organization = organizationUrl + "/" + projectID
+
+		err := fetchAndExport(endpoint, authentication, index,
+			func(environment environments) string {
+				return fmt.Sprintf("%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", environment.Id, environment.Name, environment.Description, environment.CreatedBy.Id, environment.CreatedBy.DisplayName, environment.CreatedBy.UniqueName, environment.CreatedBy.Descriptor, environment.CreatedOn, environment.ModifiedBy.Id, environment.ModifiedBy.DisplayName, environment.ModifiedBy.UniqueName, environment.ModifiedBy.Descriptor, environment.ModifiedOn, environment.Resource.Id, environment.Resource.Type, environment.Resource.Name)
+			},
+		)
+
+		if err != nil {
+			log.Printf("Error retrieving Environments data. Any output may be invalid or incomplete. Continuing anyway.")
+		}
+
+	}
+
+}
