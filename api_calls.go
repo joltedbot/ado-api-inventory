@@ -159,8 +159,9 @@ func getRepositories(organizationUrl string, authentication string, projectIDs [
 		)
 
 		if err != nil {
-			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+			log.Printf("Error retrieving Repository data. Any output may be invalid or incomplete. Continuing anyway.")
 		}
+
 	}
 
 }
@@ -188,7 +189,7 @@ func getBoards(organizationUrl string, authentication string, projectIDs []strin
 		)
 
 		if err != nil {
-			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+			log.Printf("Error retrieving Boards data. Any output may be invalid or incomplete. Continuing anyway.")
 		}
 
 	}
@@ -218,7 +219,7 @@ func getTestPlans(organizationUrl string, authentication string, projectIDs []st
 		)
 
 		if err != nil {
-			log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+			log.Printf("Error retrieving Test Plans data. Any output may be invalid or incomplete. Continuing anyway.")
 		}
 
 	}
@@ -242,10 +243,10 @@ func getWiki(organizationUrl string, authentication string, wg *sync.WaitGroup) 
 			return fmt.Sprintf("%s,%s,%t,%s,%s,%s,%s,%s,%s\n", wiki.Id, wiki.Name, wiki.IsDisabled, wiki.MappedPath, wiki.Projectid, wiki.RemoteUrl, wiki.RepositoryID, wiki.Type, wiki.URL)
 		},
 	)
-
 	if err != nil {
-		log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+		log.Printf("Error retrieving Wiki data. Any output may be invalid or incomplete. Continuing anyway.")
 	}
+
 }
 
 func getArtifactFeeds(organizationUrl string, authentication string, wg *sync.WaitGroup) {
@@ -278,7 +279,7 @@ func getArtifactFeeds(organizationUrl string, authentication string, wg *sync.Wa
 	)
 
 	if err != nil {
-		log.Printf("Error retrieving Repoisitory data. Any output may be invalid or incomplete. Continuing anyway.")
+		log.Printf("Error retrieving Artifact Feeds data. Any output may be invalid or incomplete. Continuing anyway.")
 	}
 
 }

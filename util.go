@@ -8,17 +8,29 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 )
 
-func apiURL(base string, organizationUrl string, endpoint string, parameters string) string {
+func apiURL(base string, organizationUrl string, endpoint string, parameters string) (string, error) {
 
 	if parameters != "" {
 		parameters = "&" + parameters
 	}
 
-	return base + "/" + organizationUrl + "/_apis/" + endpoint + "?api-version=7.2-preview" + parameters
+	baseURL, err := url.Parse(base)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse base URL %q: %w", base, err)
+	}
+
+	path, err := url.JoinPath(baseURL.Path, organizationUrl, "_apis", endpoint)
+	if err != nil {
+		return "", fmt.Errorf("failed to join URL path components: %w", err)
+	}
+
+	baseURL.Path = path
+	return baseURL.String() + "?api-version=7.2-preview" + parameters, nil
 
 }
 
@@ -97,7 +109,10 @@ func getEndpointStruct[T any](endpoint EndPoint, results APIResults[T], authenti
 	for {
 		loopResult := APIResults[T]{}
 
-		callURL := apiURL(endpoint.urlBase, endpoint.organization, endpoint.resource, endpoint.parameters)
+		callURL, err := apiURL(endpoint.urlBase, endpoint.organization, endpoint.resource, endpoint.parameters)
+		if err != nil {
+			return APIResults[T]{}, fmt.Errorf("failed to construct API URL for %s: %w", endpoint.resource, err)
+		}
 
 		response, token, err := apiCall(endpoint.resource, callURL, continuationToken, authentication)
 		if err != nil {
