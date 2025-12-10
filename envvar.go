@@ -8,7 +8,7 @@ import (
 )
 
 type EnvVars struct {
-	TenantId     string `validate:"required,max=36,uuid4"`
+	TenantId     string `validate:"required,len=36,uuid4"`
 	ClientId     string `validate:"required,len=36,uuid4"`
 	ClientSecret string `validate:"required,max=64,printascii"`
 	Organization string `validate:"required,max=50,printascii"`
